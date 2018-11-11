@@ -86,6 +86,10 @@ def cimread(source, packageMap=None, nsURI=None, start_dict=None):
 
             # Unique resource identifier for the CIM object.
             uuid = elem.get("{%s}ID" % ns_rdf)
+            if uuid is None:
+                uuid = elem.get("{%s}about" % ns_rdf)
+                if uuid is not None:
+                    uuid = uuid[1:]
             if uuid is not None: # class
                 # Element tag without namespace (e.g. VoltageLevel).
                 tag = elem.tag[m:]
