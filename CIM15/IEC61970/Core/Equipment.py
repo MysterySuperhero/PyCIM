@@ -20,11 +20,13 @@
 
 from CIM15.IEC61970.Core.PowerSystemResource import PowerSystemResource
 
+
 class Equipment(PowerSystemResource):
     """The parts of a power system that are physical devices, electronic or mechanicalThe parts of a power system that are physical devices, electronic or mechanical
     """
 
-    def __init__(self, normallyInService=False, aggregate=False, ContingencyEquipment=None, CustomerAgreements=None, EquipmentContainer=None, *args, **kw_args):
+    def __init__(self, normallyInService=False, aggregate=False, ContingencyEquipment=None, CustomerAgreements=None,
+                 EquipmentContainer=None, OperationalLimitSet=None, *args, **kw_args):
         """Initialises a new 'Equipment' instance.
 
         @param normallyInService: The equipment is normally in service. 
@@ -48,14 +50,17 @@ class Equipment(PowerSystemResource):
         self._EquipmentContainer = None
         self.EquipmentContainer = EquipmentContainer
 
+        self._OperationalLimitSet = []
+        self.OperationalLimitSet = [] if OperationalLimitSet is None else OperationalLimitSet
+
         super(Equipment, self).__init__(*args, **kw_args)
 
     _attrs = ["normallyInService", "aggregate"]
     _attr_types = {"normallyInService": bool, "aggregate": bool}
     _defaults = {"normallyInService": False, "aggregate": False}
     _enums = {}
-    _refs = ["ContingencyEquipment", "CustomerAgreements", "EquipmentContainer"]
-    _many_refs = ["ContingencyEquipment", "CustomerAgreements"]
+    _refs = ["ContingencyEquipment", "CustomerAgreements", "EquipmentContainer", "OperationalLimitSet"]
+    _many_refs = ["ContingencyEquipment", "CustomerAgreements", "OperationalLimitSet"]
 
     def getContingencyEquipment(self):
         """The contingency element associated with the equipment.
@@ -80,7 +85,7 @@ class Equipment(PowerSystemResource):
             obj.Equipment = None
 
     def getCustomerAgreements(self):
-        
+
         return self._CustomerAgreements
 
     def setCustomerAgreements(self, value):
@@ -123,3 +128,26 @@ class Equipment(PowerSystemResource):
 
     EquipmentContainer = property(getEquipmentContainer, setEquipmentContainer)
 
+    def getOperationalLimitSet(self):
+        """The equipment limit sets associated with the equipment.
+        """
+        return self._OperationalLimitSet
+
+    def setOperationalLimitSet(self, value):
+        for x in self._OperationalLimitSet:
+            x.Equipment = None
+        for y in value:
+            y._Equipment = self
+        self._OperationalLimitSet = value
+
+    OperationalLimitSet = property(getOperationalLimitSet, setOperationalLimitSet)
+
+    def addOperationalLimitSet(self, *OperationalLimitSet):
+        for obj in OperationalLimitSet:
+            obj.Equipment = self
+            self.OperationalLimitSet.append(obj)
+
+    def removeOperationalLimitSet(self, *OperationalLimitSet):
+        for obj in OperationalLimitSet:
+            obj.Equipment = None
+            self.OperationalLimitSet.remove(obj)
