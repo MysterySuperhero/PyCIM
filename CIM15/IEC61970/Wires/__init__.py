@@ -41,6 +41,7 @@ from CIM15.IEC61970.Wires.EnergyConsumer import EnergyConsumer
 from CIM15.IEC61970.Wires.Disconnector import Disconnector
 from CIM15.IEC61970.Wires.Connector import Connector
 from CIM15.IEC61970.Wires.ReactiveCapabilityCurve import ReactiveCapabilityCurve
+from CIM15.IEC61970.Wires.CurrentTemperatureCurve import CurrentTemperatureCurve
 from CIM15.IEC61970.Wires.Plant import Plant
 from CIM15.IEC61970.Wires.GroundDisconnector import GroundDisconnector
 from CIM15.IEC61970.Wires.Resistor import Resistor

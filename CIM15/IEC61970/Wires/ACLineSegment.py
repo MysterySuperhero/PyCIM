@@ -26,7 +26,7 @@ class ACLineSegment(Conductor):
     """A wire or combination of wires, with consistent electrical characteristics, building a single electrical system, used to carry alternating current between points in the power system. For symmetrical, transposed 3ph lines, it is sufficient to use ACLineSegment attributes, which describe sequence impedances and admittances for the entire length of the segment. If per lenght impedance data is available from a library of standard types, impedances and admittances can be calculated in one of the following ways: - calculate electrical parameters from asset data, using associated ConductorInfo, with values then multiplied by Conductor.length to produce a matrix model. - calculate unbalanced electrical parameters from associated PerLengthPhaseImpedance, then multiplied by Conductor.length to produce a matrix model. - calculate transposed electrical parameters from associated PerLengthSequenceImpedance, then multiplied by Conductor.length to produce a sequence model.A wire or combination of wires, with consistent electrical characteristics, building a single electrical system, used to carry alternating current between points in the power system. For symmetrical, transposed 3ph lines, it is sufficient to use ACLineSegment attributes, which describe sequence impedances and admittances for the entire length of the segment. If per lenght impedance data is available from a library of standard types, impedances and admittances can be calculated in one of the following ways: - calculate electrical parameters from asset data, using associated ConductorInfo, with values then multiplied by Conductor.length to produce a matrix model. - calculate unbalanced electrical parameters from associated PerLengthPhaseImpedance, then multiplied by Conductor.length to produce a matrix model. - calculate transposed electrical parameters from associated PerLengthSequenceImpedance, then multiplied by Conductor.length to produce a sequence model.
     """
 
-    def __init__(self, g0ch=0.0, r=0.0, x=0.0, gch=0.0, r0=0.0, bch=0.0, b0ch=0.0, x0=0.0, SequenceImpedance=None, ConductorAssets=None, ConductorInfo=None, Cut=None, PhaseImpedance=None, Clamp=None, ACLineSegmentPhases=None, PerLengthImpedance=None, *args, **kw_args):
+    def __init__(self, g0ch=0.0, r=0.0, x=0.0, gch=0.0, r0=0.0, bch=0.0, b0ch=0.0, x0=0.0, SequenceImpedance=None, ConductorAssets=None, ConductorInfo=None, Cut=None, PhaseImpedance=None, Clamp=None, ACLineSegmentPhases=None, PerLengthImpedance=None, CurrentTemperatureCurves=None, *args, **kw_args):
         """Initialises a new 'ACLineSegment' instance.
 
         @param g0ch: Zero sequence shunt (charging) conductance, uniformly distributed, of the entire line section. 
@@ -44,6 +44,7 @@ class ACLineSegment(Conductor):
         @param PhaseImpedance: Phase impedance of this line segment; used for unbalanced model.
         @param Clamp:
         @param ACLineSegmentPhases: List of ACLineSegmentPhase objects
+        @param CurrentTemperatureCurves: All available CurrentTemperatureCurves for this ACLineSegment.
         """
         #: Zero sequence shunt (charging) conductance, uniformly distributed, of the entire line section.
         self.g0ch = g0ch
@@ -100,14 +101,17 @@ class ACLineSegment(Conductor):
         self._ACLineSegmentPhases = []
         self.ACLineSegmentPhases = [] if ACLineSegmentPhases is None else ACLineSegmentPhases
 
+        self._CurrentTemperatureCurves = []
+        self.CurrentTemperatureCurves = [] if CurrentTemperatureCurves is None else CurrentTemperatureCurves
+
         super(ACLineSegment, self).__init__(*args, **kw_args)
 
     _attrs = ["g0ch", "r", "x", "gch", "r0", "bch", "b0ch", "x0"]
     _attr_types = {"g0ch": float, "r": float, "x": float, "gch": float, "r0": float, "bch": float, "b0ch": float, "x0": float}
     _defaults = {"g0ch": 0.0, "r": 0.0, "x": 0.0, "gch": 0.0, "r0": 0.0, "bch": 0.0, "b0ch": 0.0, "x0": 0.0}
     _enums = {}
-    _refs = ["SequenceImpedance", "ConductorAssets", "ConductorInfo", "Cut", "PhaseImpedance", "Clamp", "ACLineSegmentPhases", "PerLengthImpedance"]
-    _many_refs = ["ConductorAssets", "Cut", "Clamp", "ACLineSegmentPhases"]
+    _refs = ["SequenceImpedance", "ConductorAssets", "ConductorInfo", "Cut", "PhaseImpedance", "Clamp", "ACLineSegmentPhases", "PerLengthImpedance", "CurrentTemperatureCurves"]
+    _many_refs = ["ConductorAssets", "Cut", "Clamp", "ACLineSegmentPhases", "CurrentTemperatureCurves"]
 
     def getSequenceImpedance(self):
         """Sequence impedance of this line segment; used for balanced model.
@@ -248,4 +252,32 @@ class ACLineSegment(Conductor):
     def removeACLineSegmentPhases(self, *ACLineSegmentPhases):
         for obj in ACLineSegmentPhases:
             obj.ACLineSegment = None
+
+    def getCurrentTemperatureCurves(self):
+        """All available current-temperature curves for this ACLineSegment.
+        """
+        return self._CurrentTemperatureCurves
+
+    def setCurrentTemperatureCurves(self, value):
+        for p in self._CurrentTemperatureCurves:
+            filtered = [q for q in p.ACLineSegments if q != self]
+            self._CurrentTemperatureCurves._ACLineSegments = filtered
+        for r in value:
+            if self not in r._ACLineSegments:
+                r._ACLineSegments.append(self)
+        self._CurrentTemperatureCurves = value
+
+    CurrentTemperatureCurves = property(getCurrentTemperatureCurves, setCurrentTemperatureCurves)
+
+    def addCurrentTemperatureCurves(self, *CurrentTemperatureCurves):
+        for obj in CurrentTemperatureCurves:
+            if self not in obj._ACLineSegments:
+                obj._ACLineSegments.append(self)
+            self._CurrentTemperatureCurves.append(obj)
+
+    def removeCurrentTemperatureCurves(self, *CurrentTemperatureCurves):
+        for obj in CurrentTemperatureCurves:
+            if self in obj._ACLineSegments:
+                obj._ACLineSegments.remove(self)
+            self._CurrentTemperatureCurves.remove(obj)
 

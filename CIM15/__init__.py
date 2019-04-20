@@ -359,6 +359,7 @@ packageMap = {
     "Disconnector": "CIM15.IEC61970.Wires",
     "Connector": "CIM15.IEC61970.Wires",
     "ReactiveCapabilityCurve": "CIM15.IEC61970.Wires",
+    "CurrentTemperatureCurve": "CIM15.IEC61970.Wires",
     "Plant": "CIM15.IEC61970.Wires",
     "GroundDisconnector": "CIM15.IEC61970.Wires",
     "Resistor": "CIM15.IEC61970.Wires",
