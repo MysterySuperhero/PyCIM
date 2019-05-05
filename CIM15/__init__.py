@@ -359,7 +359,6 @@ packageMap = {
     "Disconnector": "CIM15.IEC61970.Wires",
     "Connector": "CIM15.IEC61970.Wires",
     "ReactiveCapabilityCurve": "CIM15.IEC61970.Wires",
-    "CurrentTemperatureCurve": "CIM15.IEC61970.Wires",
     "Plant": "CIM15.IEC61970.Wires",
     "GroundDisconnector": "CIM15.IEC61970.Wires",
     "Resistor": "CIM15.IEC61970.Wires",
@@ -632,6 +631,10 @@ packageMap = {
     "IEC62325CIMVersion": "CIM15.IEC62325",
     "MarketRole": "CIM15.IEC62325",
     "PackageDependenciesCIMVeresion": "CIM15.PackageDependencies",
+    "CurrentTemperatureCurve": "CIM15.IEC61970.Wires",
+    "CheckPoint": "CIM15.IEC61970.OperationalLimits",
+    "VoltageCheckPoint": "CIM15.IEC61970.OperationalLimits",
+    "VoltageTimeCurve": "CIM15.IEC61970.OperationalLimits",
 }
 
 

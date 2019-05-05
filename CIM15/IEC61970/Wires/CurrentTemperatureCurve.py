@@ -33,9 +33,9 @@ class CurrentTemperatureCurve(Curve):
 
         super(CurrentTemperatureCurve, self).__init__(*args, **kw_args)
 
-    _attrs = ["hydrogenPressure", "coolantTemperature"]
-    _attr_types = {"hydrogenPressure": float, "coolantTemperature": float}
-    _defaults = {"hydrogenPressure": 0.0, "coolantTemperature": 0.0}
+    _attrs = []
+    _attr_types = {}
+    _defaults = {}
     _enums = {}
     _refs = ["ACLineSegments"]
     _many_refs = ["ACLineSegments"]

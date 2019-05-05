@@ -34,6 +34,9 @@ from CIM15.IEC61970.OperationalLimits.BranchGroupTerminal import BranchGroupTerm
 from CIM15.IEC61970.OperationalLimits.VoltageLimitSet import VoltageLimitSet
 from CIM15.IEC61970.OperationalLimits.VoltageLimit import VoltageLimit
 from CIM15.IEC61970.OperationalLimits.OperationalLimit import OperationalLimit
+from CIM15.IEC61970.OperationalLimits.CheckPoint import CheckPoint
+from CIM15.IEC61970.OperationalLimits.VoltageCheckPoint import VoltageCheckPoint
+from CIM15.IEC61970.OperationalLimits.VoltageTimeCurve import VoltageTimeCurve
 
 nsURI = "http://iec.ch/TC57/2010/CIM-schema-cim15#OperationalLimits"
 nsPrefix = "cimOperationalLimits"
